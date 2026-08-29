@@ -100,11 +100,11 @@
 const SUPABASE_URL = "https://ymshxnnqvopsjallinoz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_X99g5Mxeds3aOgxsRXo2Ew_P0KOI48B";
 // Each item: category, date, title, summary, link.
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Each item: category, date, title, summary, link.
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Use official/verified source links where appropriate.
+let NEWS = [];
 const grid = document.getElementById('newsGrid');
-const grid = document.getElementById('newsGrid');
-async function loadNews() {
   const { data, error } = await supabase
     .from('News')
     .select('*')
