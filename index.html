@@ -97,10 +97,97 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-const SUPABASE_URL = "https://ymshxnnqvopsjallinoz.supabase.co";
-const SUPABASE_KEY = "sb_publishable_X99g5Mxeds3a0gsxRXo2Ew_P0KOI48B";
+const grid = document.getElementById("newsGrid");
 
+let NEWS = [];
+
+async function loadNews() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/News?select=*&order=created_at.desc`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    NEWS = data || [];
+    render(NEWS);
+
+  } catch (error) {
+    console.error("Failed to load news:", error);
+    grid.innerHTML = `
+      <p style="color:#aaa;">
+        Unable to load latest updates.
+      </p>
+    `;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
+}
+
+function render(items) {
+  grid.innerHTML = items.map(n => `
+    <article class="card">
+      <div class="card-body">
+        <div>
+          <span class="tag">${escapeHtml(n.category)}</span>
+          <span class="date">${escapeHtml(n.date)}</span>
+        </div>
+
+        <h3>${escapeHtml(n.title)}</h3>
+
+        <p>${escapeHtml(n.summary)}</p>
+
+        ${
+          n.link
+            ? `<a class="read" href="${escapeHtml(n.link)}"
+                target="_blank" rel="noopener">
+                READ UPDATE →
+              </a>`
+            : ""
+        }
+      </div>
+    </article>
+  `).join("");
+}
+
+loadNews();
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+document.querySelectorAll("[data-cat]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const cat = btn.dataset.cat;
+
+    document.getElementById("latest")
+      .scrollIntoView({ behavior: "smooth" });
+
+    render(
+      cat === "all"
+        ? NEWS
+        : NEWS.filter(n => n.category === cat)
+    );
+  });
+});
 const client = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
