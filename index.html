@@ -104,31 +104,24 @@ const SUPABASE_KEY =  sb_publishable_X99g5Mxeds3aOgxsRXo2Ew_P0KOI48B
 // Each item: category, date, title, summary, link.
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Use official/verified source links where appropriate.
-const NEWS = [
-  {
-    category: "India & Politics",
-    date: "29 Aug 2026",
-    title: "Welcome to The Sanatanis Officials newsroom",
-    summary: "A dedicated space for our latest updates, explainers and discussions beyond social media.",
-    link: "#about"
-  },
-  {
-    category: "Society & Caste",
-    date: "29 Aug 2026",
-    title: "Serious discussion, responsible civic participation",
-    summary: "We aim to discuss social issues, examine competing viewpoints and focus on lawful, constructive solutions.",
-    link: "#about"
-  },
-  {
-    category: "Hinduism & Texts",
-    date: "29 Aug 2026",
-    title: "Hindu texts and civilizational affairs",
-    summary: "Follow future posts covering Hindu texts, traditions, history and civilizational questions.",
-    link: "#about"
-  }
-];
+let NEWS = [];
+async function loadNews() {
+  const { data, error } = await supabase
+    .from('News')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-const grid=document.getElementById('newsGrid');
+  if (error) {
+    console.error('Failed to load news:', error);
+    return;
+  }
+
+  NEWS = data || [];
+  render(NEWS);
+}
+
+loadNews();
+    
 function render(items){
   grid.innerHTML=items.map(n=>`<article class="card">
     <div class="card-body">
