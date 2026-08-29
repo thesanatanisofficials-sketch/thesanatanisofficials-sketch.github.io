@@ -98,8 +98,7 @@
 <script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-// Add or replace news items here.
-  const SUPABASE_URL = "https://ymshxnnqvopsjallinoz.supabase.co";
+const SUPABASE_URL = "https://ymshxnnqvopsjallinoz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_X99g5Mxeds3aOgxsRXo2Ew_P0KOI48B";
 // Each item: category, date, title, summary, link.
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -110,6 +109,8 @@ async function loadNews() {
     .from('News')
     .select('*')
     .order('created_at', { ascending: false });
+
+  
 
   if (error) {
     console.error('Failed to load news:', error);
