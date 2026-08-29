@@ -103,6 +103,7 @@ const SUPABASE_KEY = "sb_publishable_X99g5Mxeds3aOgxsRXo2Ew_P0KOI48B";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const grid = document.getElementById('newsGrid');
+const grid = document.getElementById('newsGrid');
 async function loadNews() {
   const { data, error } = await supabase
     .from('News')
